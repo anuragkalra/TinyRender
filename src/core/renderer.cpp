@@ -69,6 +69,23 @@ void Renderer::render() {
          * 3) Output the rendered image into the GUI window using SDL_GL_SwapWindow(renderpass->window).
          */
         // TODO: Implement this
+        bool isRunning = true;
+        SDL_Event ev;
+
+        while(isRunning) {
+
+            while(SDL_PollEvent(&ev) != 0) {
+                if (ev.type == SDL_QUIT) {
+                    isRunning = false;
+                    SDL_Quit();
+                }
+            }
+            renderpass->render();
+            SDL_GL_SwapWindow(renderpass->window);
+        }
+
+        return;
+
     } else {
 
         //TODO 1.2 : Calculate the Camera-to-World transformation matrix - COMPLETE
