@@ -70,6 +70,21 @@ void Renderer::render() {
          */
         // TODO: Implement this
     } else {
+        //TODO 1. : Compute Camera settings
+
+        //TODO 1.1 : Calculate the Camera perspective
+
+        //TODO 1.2 : Calculate the camera-to-world transformation matrix
+
+        //TODO 1.3 : Calculate the aspect ratio - COMPLETE
+        float aspectRatio = scene.config.width / scene.config.height;
+
+        //TODO 2. : Clear image RGB buffer
+
+        //TODO 3. : Instantiate Sampler - COMPLETE
+        Sampler sampler = Sampler(123);
+
+        //TODO 4. : Loop over all pixels in the image plane
         /**
          * 1) Calculate the camera perspective, the camera-to-world transformation matrix and the aspect ratio.
          * 2) Clear integral RGB buffer.
