@@ -70,21 +70,43 @@ void Renderer::render() {
          */
         // TODO: Implement this
     } else {
-        //TODO 1. : Compute Camera settings
 
-        //TODO 1.1 : Calculate the Camera perspective
-
-        //TODO 1.2 : Calculate the camera-to-world transformation matrix
+        //TODO 1.2 : Calculate the Camera-to-World transformation matrix - COMPLETE
+        //Building a look at view matrix
+        glm::mat4 inverseView = glm::lookAt(scene.config.camera.o, scene.config.camera.at, scene.config.camera.up);
 
         //TODO 1.3 : Calculate the aspect ratio - COMPLETE
         float aspectRatio = scene.config.width / scene.config.height;
 
-        //TODO 2. : Clear image RGB buffer
+        //TODO 2. : Clear image RGB buffer - COMPLETE
+        integrator->rgb->clear();
 
         //TODO 3. : Instantiate Sampler - COMPLETE
         Sampler sampler = Sampler(123);
 
+        //TODO: Scaling
+        float scale = tan(deg2rad*(scene.config.camera.fov)/2);
+
         //TODO 4. : Loop over all pixels in the image plane
+        float x;
+        float y;
+        for(x = 0; x < scene.config.width; x++) {
+            for(y = 0; y < scene.config.height; y++) {
+                float pixelNDCX = (x + 0.5) / (float) scene.config.width;
+                float pixelNDCY = (y + 0.5) / (float) scene.config.height;
+                float pixelScreenX = 2 * pixelNDCX - 1;
+                float pixelScreenY = 1 - 2 * pixelNDCY;
+                float pixelCameraX = (pixelScreenX) * aspectRatio * scale;
+                float pixelCameraY = (pixelScreenY) * scale;
+                v3f dir = v3f(pixelCameraX, pixelCameraY, -1.f);
+                v4f direction = glm::normalize(v4f(dir, 0.f) * inverseView);
+                Ray ray = Ray(scene.config.camera.o, direction);
+                v3f color = integrator->render(ray, sampler);
+                integrator->rgb->data[scene.config.width * y + x] = color;
+            }
+        }
+
+
         /**
          * 1) Calculate the camera perspective, the camera-to-world transformation matrix and the aspect ratio.
          * 2) Clear integral RGB buffer.
